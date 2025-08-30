@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mom's Chaat Masala Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            z-index: 10;
+        }
+
+        .language-dropdown {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            padding: 8px 15px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .language-dropdown:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .language-dropdown option {
+            background: #333;
+            color: white;
+            padding: 10px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .video-section {
+            grid-column: 1 / -1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+
+
+        .video-embed {
+            width: 100%;
+            height: 400px;
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+
+
+        .calculator-section, .nutrition-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 10px;
+        }
+
+        .ingredient-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .ingredient-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .ingredient-name {
+            font-weight: bold;
+            color: #333;
+            flex-grow: 1;
+        }
+
+        .ingredient-amount {
+            background: #e3f2fd;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            color: #1976d2;
+            font-weight: bold;
+        }
+
+        .slider-container {
+            margin-top: 10px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            cursor: pointer;
+            border: none;
+        }
+
+        .nutrition-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .serving-info {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .nutrition-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .nutrition-item:last-child {
+            border-bottom: none;
+        }
+
+        .nutrition-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .nutrition-value {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .dv-percentage {
+            background: #e8f5e8;
+            color: #2d5a2d;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .high-sodium {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .medium-sodium {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .warning-banner {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .warning-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .recipe-scale {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .scale-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #1976d2;
+        }
+
+        .benefits-section {
+            background: #f1f8e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .benefit-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #4caf50;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .language-selector {
+                position: static;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .language-dropdown {
+                padding: 6px 12px;
+                font-size: 0.9em;
+            }
+
+            .video-embed {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="language-selector">
+                <select id="languageSelector" class="language-dropdown" onchange="changeLanguage(this.value)">
+                    <option value="en">🇺🇸 English</option>
+                    <option value="hi">🇮🇳 हिंदी</option>
+                    <option value="es">🇪🇸 Español</option>
+                    <option value="fr">🇫🇷 Français</option>
+                    <option value="de">🇩🇪 Deutsch</option>
+                    <option value="pt">🇧🇷 Português</option>
+                    <option value="ar">🇸🇦 العربية</option>
+                    <option value="ur">🇵🇰 اردو</option>
+                </select>
+            </div>
+            <h1 data-translate="title">🌶️ Mom's Chaat Masala Calculator</h1>
+            <p class="subtitle" data-translate="subtitle">Traditional Recipe with Modern Nutritional Insights</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Video Section -->
+            <div class="video-section">
+                <h2 class="section-title" data-translate="video_title">🎥 Watch Mom's Traditional Method</h2>
+                
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h3 style="color: #333; margin-bottom: 10px;" data-translate="video_heading">👩‍🍳 "Mom's Authentic Chaat Masala Recipe"</h3>
+                    <p style="color: #666; font-size: 1.1em; line-height: 1.6;" data-translate="video_description">
+                        Watch the traditional method passed down through generations.<br>
+                        Learn the secrets of perfect roasting and grinding techniques.
+                    </p>
+                </div>
+
+                <!-- Embedded YouTube Video -->
+                <iframe 
+                    class="video-embed"
+                    src="https://www.youtube.com/embed/kt7a1XiolGE" 
+                    title="Mom's Chaat Masala Recipe"
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <div class="calculator-section">
+                <h2 class="section-title" data-translate="calculator_title">🧮 Recipe Calculator</h2>
+                
+                <div class="recipe-scale">
+                    <div class="scale-label" data-translate="scale_factor">Recipe Scale Factor</div>
+                    <input type="range" id="recipeScale" class="slider" min="0.1" max="5" step="0.1" value="1">
+                    <div style="text-align: center; margin-top: 10px; font-weight: bold;">
+                        <span id="scaleValue">1.0x</span> (Makes <span id="totalWeight">194g</span>)
+                    </div>
+                </div>
+
+                <div class="ingredient-item">
+                    <div class="ingredient-header">
+                        <span class="ingredient-name" data-translate="cumin">🌰 Cumin Seeds (Roasted)</span>
+                        <span class="ingredient-amount" id="cumin-amount">100g</span>
+                    </div>
+                    <div class="slider-container">
+                        <small data-translate="base_ingredient">Base ingredient - other spices scale proportionally</small>
+                    </div>
+                </div>
+
+                <div class="ingredient-item">
+                    <div class="ingredient-header">
+                        <span class="ingredient-name">🧂 Black Salt (Kala Namak)</span>
+                        <span class="ingredient-amount" id="black-salt-amount">25g</span>
+                    </div>
+                </div>
+
+                <div class="ingredient-item">
+                    <div class="ingredient-header">
+                        <span class="ingredient-name">🧂 White Salt</span>
+                        <span class="ingredient-amount" id="white-salt-amount">25g</span>
+                    </div>
+                </div>
+
+                <div class="ingredient-item">
+                    <div class="ingredient-header">
+                        <span class="ingredient-name">⚫ Black Pepper</span>
+                        <span class="ingredient-amount" id="black-pepper-amount">12.5g</span>
+                    </div>
+                </div>
+
+                <div class="ingredient-item">
+                    <div class="ingredient-header">
+                        <span class="ingredient-name">🌿 Garam Masala</span>
+                        <span class="ingredient-amount" id="garam-masala-amount">12.5g</span>
+                    </div>
+                </div>
+
+                <div class="ingredient-item">
+                    <div class="ingredient-header">
+                        <span class="ingredient-name">🥭 Dried Mango Powder (Amchur)</span>
+                        <span class="ingredient-amount" id="amchur-amount">12.5g</span>
+                    </div>
+                </div>
+
+                <div class="ingredient-item">
+                    <div class="ingredient-header">
+                        <span class="ingredient-name">🌶️ Red Chili Powder</span>
+                        <span class="ingredient-amount" id="chili-amount">6.25g</span>
+                    </div>
+                </div>
+
+                <div class="recipe-scale">
+                    <div class="scale-label">Serving Size</div>
+                    <input type="range" id="servingSize" class="slider" min="0.5" max="5" step="0.25" value="2">
+                    <div style="text-align: center; margin-top: 10px; font-weight: bold;">
+                        <span id="servingSizeValue">2.0g</span> (~<span id="servingCount">97</span> servings total)
+                    </div>
+                </div>
+            </div>
+
+            <div class="nutrition-section">
+                <h2 class="section-title" data-translate="nutrition_title">📊 Nutritional Information</h2>
+
+                <div class="serving-info">
+                    <strong>Per Serving (<span id="currentServing">2.0g</span>)</strong>
+                </div>
+
+                <div id="sodiumWarning" class="warning-banner" style="display: none;">
+                    <span class="warning-icon">⚠️</span>
+                    <div>
+                        <strong>High Sodium Alert!</strong><br>
+                        This serving contains significant sodium. Use sparingly if monitoring sodium intake.
+                    </div>
+                </div>
+
+                <div class="nutrition-panel">
+                    <div class="nutrition-item">
+                        <span class="nutrition-name">Calories</span>
+                        <span class="nutrition-value" id="calories">8.2 kcal</span>
+                    </div>
+                    
+                    <div class="nutrition-item">
+                        <span class="nutrition-name">Total Fat</span>
+                        <div>
+                            <span class="nutrition-value" id="fat">0.5g</span>
+                            <span class="dv-percentage" id="fatDV">1%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="nutrition-item">
+                        <span class="nutrition-name">Sodium</span>
+                        <div>
+                            <span class="nutrition-value" id="sodium">388mg</span>
+                            <span class="dv-percentage" id="sodiumDV">17%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="nutrition-item">
+                        <span class="nutrition-name">Total Carbohydrates</span>
+                        <div>
+                            <span class="nutrition-value" id="carbs">1.0g</span>
+                            <span class="dv-percentage" id="carbsDV">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="nutrition-item">
+                        <span class="nutrition-name">Dietary Fiber</span>
+                        <div>
+                            <span class="nutrition-value" id="fiber">0.3g</span>
+                            <span class="dv-percentage" id="fiberDV">1%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="nutrition-item">
+                        <span class="nutrition-name">Protein</span>
+                        <div>
+                            <span class="nutrition-value" id="protein">0.4g</span>
+                            <span class="dv-percentage" id="proteinDV">1%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="nutrition-item">
+                        <span class="nutrition-name">Iron</span>
+                        <div>
+                            <span class="nutrition-value" id="iron">1.4mg</span>
+                            <span class="dv-percentage" id="ironDV">8%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="benefits-section">
+                    <h3 style="margin-bottom: 15px; color: #4caf50;" data-translate="health_benefits">🌟 Health Benefits</h3>
+                    <div class="benefit-item">
+                        <strong>Digestive Aid:</strong> Cumin and black salt help with digestion
+                    </div>
+                    <div class="benefit-item">
+                        <strong>Antioxidants:</strong> Black pepper and chili powder provide antioxidants
+                    </div>
+                    <div class="benefit-item">
+                        <strong>Iron Source:</strong> Cumin seeds are rich in iron
+                    </div>
+                    <div class="benefit-item">
+                        <strong>Vitamin C:</strong> Amchur provides natural vitamin C
+                    </div>
+                    <div class="benefit-item">
+                        <strong>Metabolism Boost:</strong> Spices can help boost metabolism
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Nutritional data per 100g for each ingredient
+        const nutritionData = {
+            cumin: {
+                calories: 375, protein: 17.8, fat: 22.3, carbs: 44.2, 
+                fiber: 10.5, sodium: 168, iron: 66.4
+            },
+            blackSalt: {
+                calories: 0, protein: 0, fat: 0, carbs: 0, 
+                fiber: 0, sodium: 38800, iron: 26.7
+            },
+            whiteSalt: {
+                calories: 0, protein: 0, fat: 0, carbs: 0, 
+                fiber: 0, sodium: 38758, iron: 0.33
+            },
+            blackPepper: {
+                calories: 251, protein: 10.4, fat: 3.3, carbs: 64, 
+                fiber: 25.3, sodium: 20, iron: 9.7
+            },
+            garamMasala: {
+                calories: 350, protein: 15, fat: 14, carbs: 50, 
+                fiber: 20, sodium: 50, iron: 15
+            },
+            amchur: {
+                calories: 300, protein: 3, fat: 1, carbs: 75, 
+                fiber: 12, sodium: 5, iron: 2.5
+            },
+            chili: {
+                calories: 282, protein: 14.1, fat: 12.9, carbs: 49.5, 
+                fiber: 34.9, sodium: 30, iron: 17.3
+            }
+        };
+
+        // Base recipe quantities (in grams)
+        const baseRecipe = {
+            cumin: 100,
+            blackSalt: 25,
+            whiteSalt: 25,
+            blackPepper: 12.5,
+            garamMasala: 12.5,
+            amchur: 12.5,
+            chili: 6.25
+        };
+
+        // Daily Values (based on 2000 calorie diet)
+        const dailyValues = {
+            calories: 2000,
+            fat: 78,
+            sodium: 2300,
+            carbs: 275,
+            fiber: 28,
+            protein: 50,
+            iron: 18
+        };
+
+        function updateRecipe() {
+            const scale = document.getElementById('recipeScale').value;
+            const servingSize = document.getElementById('servingSize').value;
+
+            // Update scale display
+            document.getElementById('scaleValue').textContent = parseFloat(scale).toFixed(1) + 'x';
+            
+            // Update ingredient amounts
+            Object.keys(baseRecipe).forEach(ingredient => {
+                const amount = (baseRecipe[ingredient] * scale).toFixed(1);
+                const elementId = ingredient === 'blackSalt' ? 'black-salt-amount' :
+                                ingredient === 'whiteSalt' ? 'white-salt-amount' :
+                                ingredient === 'blackPepper' ? 'black-pepper-amount' :
+                                ingredient === 'garamMasala' ? 'garam-masala-amount' :
+                                ingredient === 'amchur' ? 'amchur-amount' :
+                                ingredient === 'chili' ? 'chili-amount' :
+                                ingredient + '-amount';
+                document.getElementById(elementId).textContent = amount + 'g';
+            });
+
+            // Calculate total weight
+            const totalWeight = Object.values(baseRecipe).reduce((sum, amount) => sum + amount, 0) * scale;
+            document.getElementById('totalWeight').textContent = totalWeight.toFixed(0) + 'g';
+
+            // Update serving info
+            document.getElementById('servingSizeValue').textContent = parseFloat(servingSize).toFixed(1) + 'g';
+            document.getElementById('currentServing').textContent = parseFloat(servingSize).toFixed(1) + 'g';
+            document.getElementById('servingCount').textContent = Math.round(totalWeight / servingSize);
+
+            // Calculate nutrition per serving
+            calculateNutrition(scale, servingSize);
+        }
+
+        function calculateNutrition(scale, servingSize) {
+            let totalNutrition = {
+                calories: 0, protein: 0, fat: 0, carbs: 0,
+                fiber: 0, sodium: 0, iron: 0
+            };
+
+            // Calculate total nutrition for the entire batch
+            Object.keys(baseRecipe).forEach(ingredient => {
+                const amount = baseRecipe[ingredient] * scale; // in grams
+                const data = nutritionData[ingredient];
+                
+                Object.keys(totalNutrition).forEach(nutrient => {
+                    totalNutrition[nutrient] += (data[nutrient] * amount) / 100;
+                });
+            });
+
+            // Calculate nutrition per serving
+            const totalWeight = Object.values(baseRecipe).reduce((sum, amount) => sum + amount, 0) * scale;
+            const servingRatio = servingSize / totalWeight;
+
+            const perServing = {};
+            Object.keys(totalNutrition).forEach(nutrient => {
+                perServing[nutrient] = totalNutrition[nutrient] * servingRatio;
+            });
+
+            // Update display
+            document.getElementById('calories').textContent = perServing.calories.toFixed(1) + ' kcal';
+            document.getElementById('fat').textContent = perServing.fat.toFixed(1) + 'g';
+            document.getElementById('sodium').textContent = perServing.sodium.toFixed(0) + 'mg';
+            document.getElementById('carbs').textContent = perServing.carbs.toFixed(1) + 'g';
+            document.getElementById('fiber').textContent = perServing.fiber.toFixed(1) + 'g';
+            document.getElementById('protein').textContent = perServing.protein.toFixed(1) + 'g';
+            document.getElementById('iron').textContent = perServing.iron.toFixed(1) + 'mg';
+
+            // Calculate and display Daily Values percentages
+            const fatDV = Math.round((perServing.fat / dailyValues.fat) * 100);
+            const sodiumDV = Math.round((perServing.sodium / dailyValues.sodium) * 100);
+            const carbsDV = Math.round((perServing.carbs / dailyValues.carbs) * 100);
+            const fiberDV = Math.round((perServing.fiber / dailyValues.fiber) * 100);
+            const proteinDV = Math.round((perServing.protein / dailyValues.protein) * 100);
+            const ironDV = Math.round((perServing.iron / dailyValues.iron) * 100);
+
+            document.getElementById('fatDV').textContent = fatDV + '%';
+            document.getElementById('sodiumDV').textContent = sodiumDV + '%';
+            document.getElementById('carbsDV').textContent = carbsDV + '%';
+            document.getElementById('fiberDV').textContent = fiberDV + '%';
+            document.getElementById('proteinDV').textContent = proteinDV + '%';
+            document.getElementById('ironDV').textContent = ironDV + '%';
+
+            // Update sodium warning and DV styling
+            const sodiumWarning = document.getElementById('sodiumWarning');
+            const sodiumDVElement = document.getElementById('sodiumDV');
+            
+            if (sodiumDV >= 20) {
+                sodiumWarning.style.display = 'flex';
+                sodiumDVElement.className = 'dv-percentage high-sodium';
+            } else if (sodiumDV >= 10) {
+                sodiumWarning.style.display = 'none';
+                sodiumDVElement.className = 'dv-percentage medium-sodium';
+            } else {
+                sodiumWarning.style.display = 'none';
+                sodiumDVElement.className = 'dv-percentage';
+            }
+        }
+
+
+
+        // Translation System
+        const translations = {
+            en: {
+                title: "🌶️ Mom's Chaat Masala Calculator",
+                subtitle: "Traditional Recipe with Modern Nutritional Insights",
+                video_title: "🎥 Watch Mom's Traditional Method",
+                video_heading: "👩‍🍳 \"Mom's Authentic Chaat Masala Recipe\"",
+                video_description: "Watch the traditional method passed down through generations.<br>Learn the secrets of perfect roasting and grinding techniques.",
+                calculator_title: "🧮 Recipe Calculator",
+                scale_factor: "Recipe Scale Factor",
+                cumin: "🌰 Cumin Seeds (Roasted)",
+                base_ingredient: "Base ingredient - other spices scale proportionally",
+                nutrition_title: "📊 Nutritional Information",
+                health_benefits: "🌟 Health Benefits"
+            },
+            hi: {
+                title: "🌶️ माँ का चाट मसाला कैलकुलेटर",
+                subtitle: "आधुनिक पोषण जानकारी के साथ पारंपरिक रेसिपी",
+                video_title: "🎥 माँ की पारंपरिक विधि देखें",
+                video_heading: "👩‍🍳 \"माँ की प्रामाणिक चाट मसाला रेसिपी\"",
+                video_description: "पीढ़ियों से चली आ रही पारंपरिक विधि देखें।<br>भुनाई और पीसने की गुप्त तकनीकें सीखें।",
+                calculator_title: "🧮 रेसिपी कैलकुलेटर",
+                scale_factor: "रेसिपी स्केल फैक्टर",
+                cumin: "🌰 जीरा (भुना हुआ)",
+                base_ingredient: "मूल सामग्री - अन्य मसाले आनुपातिक रूप से बढ़ते हैं",
+                nutrition_title: "📊 पोषण संबंधी जानकारी",
+                health_benefits: "🌟 स्वास्थ्य लाभ"
+            },
+            es: {
+                title: "🌶️ Calculadora de Chaat Masala de Mamá",
+                subtitle: "Receta Tradicional con Información Nutricional Moderna",
+                video_title: "🎥 Mira el Método Tradicional de Mamá",
+                video_heading: "👩‍🍳 \"Receta Auténtica de Chaat Masala de Mamá\"",
+                video_description: "Observa el método tradicional transmitido de generación en generación.<br>Aprende los secretos del tostado y molido perfectos.",
+                calculator_title: "🧮 Calculadora de Receta",
+                scale_factor: "Factor de Escala de Receta",
+                cumin: "🌰 Semillas de Comino (Tostadas)",
+                base_ingredient: "Ingrediente base - otras especias escalan proporcionalmente",
+                nutrition_title: "📊 Información Nutricional",
+                health_benefits: "🌟 Beneficios para la Salud"
+            },
+            fr: {
+                title: "🌶️ Calculatrice Chaat Masala de Maman",
+                subtitle: "Recette Traditionnelle avec Informations Nutritionnelles Modernes",
+                video_title: "🎥 Regardez la Méthode Traditionnelle de Maman",
+                video_heading: "👩‍🍳 \"Recette Authentique de Chaat Masala de Maman\"",
+                video_description: "Regardez la méthode traditionnelle transmise de génération en génération.<br>Apprenez les secrets du grillage et du broyage parfaits.",
+                calculator_title: "🧮 Calculatrice de Recette",
+                scale_factor: "Facteur d'Échelle de Recette",
+                cumin: "🌰 Graines de Cumin (Grillées)",
+                base_ingredient: "Ingrédient de base - autres épices à l'échelle proportionnelle",
+                nutrition_title: "📊 Informations Nutritionnelles",
+                health_benefits: "🌟 Bienfaits pour la Santé"
+            },
+            de: {
+                title: "🌶️ Mamas Chaat Masala Rechner",
+                subtitle: "Traditionelles Rezept mit Modernen Nährwertinformationen",
+                video_title: "🎥 Schaue Mamas Traditionelle Methode",
+                video_heading: "👩‍🍳 \"Mamas Authentisches Chaat Masala Rezept\"",
+                video_description: "Schaue die traditionelle Methode, die über Generationen weitergegeben wurde.<br>Lerne die Geheimnisse des perfekten Röstens und Mahlens.",
+                calculator_title: "🧮 Rezept-Rechner",
+                scale_factor: "Rezept-Skalierungsfaktor",
+                cumin: "🌰 Kreuzkümmelsamen (Geröstet)",
+                base_ingredient: "Grundzutat - andere Gewürze skalieren proportional",
+                nutrition_title: "📊 Nährwertinformationen",
+                health_benefits: "🌟 Gesundheitsvorteile"
+            },
+            pt: {
+                title: "🌶️ Calculadora de Chaat Masala da Mamãe",
+                subtitle: "Receita Tradicional com Informações Nutricionais Modernas",
+                video_title: "🎥 Assista o Método Tradicional da Mamãe",
+                video_heading: "👩‍🍳 \"Receita Autêntica de Chaat Masala da Mamãe\"",
+                video_description: "Assista o método tradicional passado de geração em geração.<br>Aprenda os segredos da tostagem e moagem perfeitas.",
+                calculator_title: "🧮 Calculadora de Receita",
+                scale_factor: "Fator de Escala da Receita",
+                cumin: "🌰 Sementes de Cominho (Torradas)",
+                base_ingredient: "Ingrediente base - outras especiarias escalam proporcionalmente",
+                nutrition_title: "📊 Informações Nutricionais",
+                health_benefits: "🌟 Benefícios para a Saúde"
+            },
+            ar: {
+                title: "🌶️ حاسبة تشات ماسالا الأم",
+                subtitle: "وصفة تقليدية مع معلومات غذائية حديثة",
+                video_title: "🎥 شاهد طريقة الأم التقليدية",
+                video_heading: "👩‍🍳 \"وصفة تشات ماسالا الأصلية للأم\"",
+                video_description: "شاهد الطريقة التقليدية المنقولة عبر الأجيال.<br>تعلم أسرار التحميص والطحن المثالي.",
+                calculator_title: "🧮 حاسبة الوصفة",
+                scale_factor: "عامل مقياس الوصفة",
+                cumin: "🌰 بذور الكمون (محمصة)",
+                base_ingredient: "المكون الأساسي - التوابل الأخرى تتناسب نسبياً",
+                nutrition_title: "📊 المعلومات الغذائية",
+                health_benefits: "🌟 الفوائد الصحية"
+            },
+            ur: {
+                title: "🌶️ امی کا چاٹ مسالہ کیلکولیٹر",
+                subtitle: "جدید غذائی معلومات کے ساتھ روایتی ترکیب",
+                video_title: "🎥 امی کا روایتی طریقہ دیکھیں",
+                video_heading: "👩‍🍳 \"امی کا اصل چاٹ مسالہ ترکیب\"",
+                video_description: "نسلوں سے چلے آ رہے روایتی طریقے کو دیکھیں۔<br>بھونے اور پیسنے کی خفیہ تکنیکیں سیکھیں۔",
+                calculator_title: "🧮 ترکیب کیلکولیٹر",
+                scale_factor: "ترکیب اسکیل فیکٹر",
+                cumin: "🌰 زیرہ (بھنا ہوا)",
+                base_ingredient: "بنیادی جزو - دوسرے مسالے متناسب طور پر بڑھتے ہیں",
+                nutrition_title: "📊 غذائی معلومات",
+                health_benefits: "🌟 صحت کے فوائد"
+            }
+        };
+
+        function changeLanguage(lang) {
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+            
+            // Save language preference
+            localStorage.setItem('selectedLanguage', lang);
+        }
+
+        // Load saved language on page load
+        function loadSavedLanguage() {
+            const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+            document.getElementById('languageSelector').value = savedLang;
+            changeLanguage(savedLang);
+        }
+
+        // Event listeners
+        document.getElementById('recipeScale').addEventListener('input', updateRecipe);
+        document.getElementById('servingSize').addEventListener('input', updateRecipe);
+
+        // Initialize
+        updateRecipe();
+        loadSavedLanguage();
+    </script>
+</body>
+</html>
