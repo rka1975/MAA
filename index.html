@@ -60,58 +60,7 @@
             margin-bottom: 20px;
         }
 
-        .video-placeholder {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            padding: 40px;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
 
-        .video-placeholder::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/><polygon points="45,40 45,60 65,50" fill="rgba(255,255,255,0.7)"/></svg>') center/80px no-repeat;
-            opacity: 0.3;
-        }
-
-        .video-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .video-title {
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .video-description {
-            font-size: 1.1em;
-            margin-bottom: 20px;
-            opacity: 0.9;
-            line-height: 1.6;
-        }
-
-        .video-placeholder-text {
-            background: rgba(255,255,255,0.2);
-            padding: 15px 25px;
-            border-radius: 25px;
-            border: 2px dashed rgba(255,255,255,0.5);
-            font-weight: bold;
-            display: inline-block;
-        }
 
         .video-embed {
             width: 100%;
@@ -121,9 +70,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .video-hidden {
-            display: none;
-        }
+
 
         .calculator-section, .nutrition-section {
             background: #f8f9fa;
@@ -312,14 +259,7 @@
                 font-size: 2em;
             }
 
-            .video-placeholder {
-                min-height: 250px;
-                padding: 30px 20px;
-            }
 
-            .video-title {
-                font-size: 1.5em;
-            }
 
             .video-embed {
                 height: 250px;
@@ -339,44 +279,23 @@
             <div class="video-section">
                 <h2 class="section-title">🎥 Watch Mom's Traditional Method</h2>
                 
-                <div class="video-placeholder" id="videoPlaceholder">
-                    <div class="video-content">
-                        <h3 class="video-title">👩‍🍳 "Mom's Authentic Chaat Masala Recipe"</h3>
-                        <p class="video-description">
-                            Watch the traditional method passed down through generations.<br>
-                            Learn the secrets of perfect roasting and grinding techniques.
-                        </p>
-                        <div class="video-placeholder-text">
-                            📹 YouTube Video Placeholder<br>
-                            <small>Click here to add your video URL</small>
-                        </div>
-                    </div>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h3 style="color: #333; margin-bottom: 10px;">👩‍🍳 "Mom's Authentic Chaat Masala Recipe"</h3>
+                    <p style="color: #666; font-size: 1.1em; line-height: 1.6;">
+                        Watch the traditional method passed down through generations.<br>
+                        Learn the secrets of perfect roasting and grinding techniques.
+                    </p>
                 </div>
 
-                <!-- Hidden iframe that will be shown when video URL is added -->
+                <!-- Embedded YouTube Video -->
                 <iframe 
-                    id="videoEmbed" 
-                    class="video-embed video-hidden"
-                    src="" 
+                    class="video-embed"
+                    src="https://www.youtube.com/embed/kt7a1XiolGE" 
                     title="Mom's Chaat Masala Recipe"
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     allowfullscreen>
                 </iframe>
-
-                <div style="margin-top: 15px; text-align: center;">
-                    <input 
-                        type="text" 
-                        id="videoUrl" 
-                        placeholder="Paste YouTube video URL here..." 
-                        style="width: 70%; padding: 10px; border: 2px solid #ddd; border-radius: 25px; margin-right: 10px;"
-                    >
-                    <button 
-                        onclick="embedVideo()" 
-                        style="padding: 10px 20px; background: #ff6b6b; color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold;">
-                        📺 Add Video
-                    </button>
-                </div>
             </div>
 
             <div class="calculator-section">
@@ -696,63 +615,7 @@
             }
         }
 
-        // Video embedding functionality
-        function embedVideo() {
-            const urlInput = document.getElementById('videoUrl');
-            const videoUrl = urlInput.value.trim();
-            
-            if (!videoUrl) {
-                alert('Please enter a YouTube video URL');
-                return;
-            }
 
-            // Convert YouTube URL to embed format
-            let embedUrl = '';
-            try {
-                if (videoUrl.includes('youtube.com/watch?v=')) {
-                    const videoId = videoUrl.split('v=')[1].split('&')[0];
-                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
-                } else if (videoUrl.includes('youtu.be/')) {
-                    const videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
-                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
-                } else if (videoUrl.includes('youtube.com/embed/')) {
-                    embedUrl = videoUrl; // Already in embed format
-                } else {
-                    alert('Please enter a valid YouTube URL');
-                    return;
-                }
-
-                // Hide placeholder and show video
-                document.getElementById('videoPlaceholder').style.display = 'none';
-                const videoEmbed = document.getElementById('videoEmbed');
-                videoEmbed.src = embedUrl;
-                videoEmbed.classList.remove('video-hidden');
-                
-                // Clear the input
-                urlInput.value = '';
-                
-                // Update button to allow changing video
-                const button = urlInput.nextElementSibling;
-                button.innerHTML = '🔄 Change Video';
-                button.onclick = function() {
-                    document.getElementById('videoPlaceholder').style.display = 'flex';
-                    videoEmbed.classList.add('video-hidden');
-                    videoEmbed.src = '';
-                    button.innerHTML = '📺 Add Video';
-                    button.onclick = embedVideo;
-                };
-
-            } catch (error) {
-                alert('Error processing video URL. Please check the URL and try again.');
-            }
-        }
-
-        // Allow Enter key to add video
-        document.getElementById('videoUrl').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                embedVideo();
-            }
-        });
 
         // Event listeners
         document.getElementById('recipeScale').addEventListener('input', updateRecipe);
